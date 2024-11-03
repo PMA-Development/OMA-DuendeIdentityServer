@@ -7,16 +7,17 @@ using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace OMA_DuendeIdentityServer.Pages.Create;
+namespace OMA_DuendeIdentityServer.Pages.Account.Create;
 
 [SecurityHeaders]
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly TestUserStore _users;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly IIdentityServerInteractionService _interaction;
 
     [BindProperty]
@@ -24,10 +25,10 @@ public class Index : PageModel
 
     public Index(
         IIdentityServerInteractionService interaction,
-        TestUserStore? users = null)
+        UserManager<IdentityUser>? userManager = null)
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-        _users = users ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
+        _userManager = userManager ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
             
         _interaction = interaction;
     }
@@ -70,22 +71,27 @@ public class Index : PageModel
             }
         }
         
-        if (_users.FindByUsername(Input.Username) != null)
-        {
-            ModelState.AddModelError("Input.Username", "Invalid username");
-        }
+        //TODO: New validation
+        //if (_userManager.FindByNameAsync(Input.Username) != null)
+        //{
+        //    ModelState.AddModelError("Input.Username", "Invalid username");
+        //}
 
         if (ModelState.IsValid)
         {
-            var user = _users.CreateUser(Input.Username, Input.Password, Input.Name, Input.Email);
+            PasswordHasher<IdentityUser> passwordHasher = new();
+            IdentityUser identityUser = new() { UserName = Input.Username, Email = Input.Email, EmailConfirmed = true};
+            identityUser.PasswordHash = passwordHasher.HashPassword(identityUser, Input.Password!);
+            
+            var user = await _userManager.CreateAsync(identityUser);
 
             // issue authentication cookie with subject ID and username
-            var isuser = new IdentityServerUser(user.SubjectId)
-            {
-                DisplayName = user.Username
-            };
+            //var isuser = new IdentityServerUser(user.SubjectId)
+            //{
+            //    DisplayName = user.Username
+            //};
 
-            await HttpContext.SignInAsync(isuser);
+            //await HttpContext.SignInAsync(isuser);
 
             if (context != null)
             {
