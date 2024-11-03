@@ -1,0 +1,40 @@
+﻿@page
+@model OMA_DuendeIdentityServer.Pages.ClientManagement.IndexModel
+@using Duende.IdentityServer.EntityFramework.Entities
+@{
+    ViewData["Title"] = "Clients";
+}
+
+
+@if (TempData["GeneratedSecret"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Generated Secret:</strong> @TempData["GeneratedSecret"]
+    </div>
+}
+
+<h1>Clients</h1>
+<a asp-page="Create">Create New Client</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Client ID</th>
+            <th>Client Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model.Clients)
+        {
+            <tr>
+                <td>@client.ClientId</td>
+                <td>@client.ClientName</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@client.Id">Edit</a>
+                    <a asp-page="Delete" asp-route-id="@client.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

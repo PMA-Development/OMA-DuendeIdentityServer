@@ -69,7 +69,7 @@ public class Index : PageModel
                 return Redirect("~/");
             }
         }
-
+        
         if (_users.FindByUsername(Input.Username) != null)
         {
             ModelState.AddModelError("Input.Username", "Invalid username");

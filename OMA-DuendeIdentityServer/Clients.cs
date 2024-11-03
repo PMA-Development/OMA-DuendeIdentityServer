@@ -33,7 +33,6 @@ namespace OMA_DuendeIdentityServer
                         "role",
                         "api1.read"
                     },
-
                     RequirePkce = true,
                     AllowPlainTextPkce = false
                 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMA-DuendeIdentityServer", "OMA-DuendeIdentityServer\OMA-DuendeIdentityServer.csproj", "{C66E9526-9106-4596-9B42-913F2C3E3C30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMA-DuendeIdentityServer", "OMA-DuendeIdentityServer\OMA-DuendeIdentityServer.csproj", "{C66E9526-9106-4596-9B42-913F2C3E3C30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPage", "TestPage\TestPage.csproj", "{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPage", "TestPage\TestPage.csproj", "{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
