@@ -18,6 +18,7 @@ namespace OMA_DuendeIdentityServer.Pages.Account.Create;
 public class Index : PageModel
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IIdentityServerInteractionService _interaction;
 
     [BindProperty]
@@ -25,11 +26,12 @@ public class Index : PageModel
 
     public Index(
         IIdentityServerInteractionService interaction,
-        UserManager<IdentityUser>? userManager = null)
+        UserManager<IdentityUser>? userManager = null,
+        RoleManager<IdentityRole>? roleManager = null)
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
         _userManager = userManager ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
-            
+        _roleManager = roleManager;
         _interaction = interaction;
     }
 
@@ -85,6 +87,7 @@ public class Index : PageModel
             
             var user = await _userManager.CreateAsync(identityUser);
 
+            await _userManager.AddToRoleAsync(identityUser, "Hotline-User");
             // issue authentication cookie with subject ID and username
             //var isuser = new IdentityServerUser(user.SubjectId)
             //{
