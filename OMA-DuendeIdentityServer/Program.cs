@@ -70,67 +70,67 @@ namespace OMA_DuendeIdentityServer
         }
 
 
-        //private static void InitializeDbTestData(IApplicationBuilder app)
-        //{
-        //    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        //    {
-        //        serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-        //        serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
-        //        serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+        private static void InitializeDbTestData(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
 
-        //        var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
 
-        //        if (!context.Clients.Any())
-        //        {
-        //            foreach (var client in Clients.Get())
-        //            {
-        //                context.Clients.Add(client.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
+                if (!context.Clients.Any())
+                {
+                    foreach (var client in Clients.Get())
+                    {
+                        context.Clients.Add(client.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
 
-        //        if (!context.IdentityResources.Any())
-        //        {
-        //            foreach (var resource in Resources.GetIdentityResources())
-        //            {
-        //                context.IdentityResources.Add(resource.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
+                if (!context.IdentityResources.Any())
+                {
+                    foreach (var resource in Resources.GetIdentityResources())
+                    {
+                        context.IdentityResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
 
-        //        if (!context.ApiScopes.Any())
-        //        {
-        //            foreach (var scope in Resources.GetApiScopes())
-        //            {
-        //                context.ApiScopes.Add(scope.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
+                if (!context.ApiScopes.Any())
+                {
+                    foreach (var scope in Resources.GetApiScopes())
+                    {
+                        context.ApiScopes.Add(scope.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
 
-        //        if (!context.ApiResources.Any())
-        //        {
-        //            foreach (var resource in Resources.GetApiResources())
-        //            {
-        //                context.ApiResources.Add(resource.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
+                if (!context.ApiResources.Any())
+                {
+                    foreach (var resource in Resources.GetApiResources())
+                    {
+                        context.ApiResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
 
-        //        var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-        //        if (!userManager.Users.Any())
-        //        {
-        //            foreach (var testUser in Users.Get())
-        //            {
-        //                var identityUser = new IdentityUser(testUser.Username)
-        //                {
-        //                    Id = testUser.SubjectId
-        //                };
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                if (!userManager.Users.Any())
+                {
+                    foreach (var testUser in Users.Get())
+                    {
+                        var identityUser = new IdentityUser(testUser.Username)
+                        {
+                            Id = testUser.SubjectId
+                        };
 
-        //                userManager.CreateAsync(identityUser, "Password123!").Wait();
-        //                userManager.AddClaimsAsync(identityUser, testUser.Claims.ToList()).Wait();
-        //            }
-        //        }
-        //    }
-        //}
+                        userManager.CreateAsync(identityUser, "Password123!").Wait();
+                        userManager.AddClaimsAsync(identityUser, testUser.Claims.ToList()).Wait();
+                    }
+                }
+            }
+        }
     }
 }

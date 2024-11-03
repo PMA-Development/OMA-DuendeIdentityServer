@@ -14,24 +14,24 @@ namespace TestPage
                 options.DefaultScheme = "cookie";
                 options.DefaultChallengeScheme = "oidc";
             })
-    .AddCookie("cookie")
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://localhost:5000";
-        options.ClientId = "oidcClient";
-        options.ClientSecret = "SuperSecretPassword";
+            .AddCookie("cookie")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.Authority = "https://localhost:5000";
+                options.ClientId = "testID2";
+                options.ClientSecret = "uKKCCAlB8Qys/8QZr/udsR5VfFSpyTKLay/Fa/ngICU=";
 
-        options.ResponseType = "code";
-        options.UsePkce = true;
-        options.ResponseMode = "query";
+                options.ResponseType = "code";
+                options.UsePkce = true;
+                options.ResponseMode = "query";
 
-        // options.CallbackPath = "/signin-oidc"; // default redirect URI
+                // options.CallbackPath = "/signin-oidc"; // default redirect URI
 
-        // options.Scope.Add("oidc"); // default scope
-        // options.Scope.Add("profile"); // default scope
-        options.Scope.Add("api1.read");
-        options.SaveTokens = true;
-    });
+                // options.Scope.Add("oidc"); // default scope
+                // options.Scope.Add("profile"); // default scope
+                //options.Scope.Add("api1.read");
+                options.SaveTokens = true;
+            });
 
 
             var app = builder.Build();

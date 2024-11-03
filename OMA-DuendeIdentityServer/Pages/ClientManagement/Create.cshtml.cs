@@ -1,7 +1,10 @@
+using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
 
 namespace OMA_DuendeIdentityServer.Pages.ClientManagement
 {
@@ -16,7 +19,7 @@ namespace OMA_DuendeIdentityServer.Pages.ClientManagement
         }
 
         [BindProperty]
-        public Client Client { get; set; }
+        public Client NewClient { get; set; }
 
         public IActionResult OnGet()
         {
@@ -32,31 +35,24 @@ namespace OMA_DuendeIdentityServer.Pages.ClientManagement
 
             // Generate a random Clientsecret
             var randomSecret = SecretGenerator.GenerateRandomSecret();
-            var hashedSecret = SecretGenerator.HashSecret(randomSecret);
+            //var hashedSecret = SecretGenerator.HashSecret(randomSecret);
 
             // Add the secret to the client's secrets
-            Client.ClientSecrets = new List<ClientSecret>
+            NewClient.ClientSecrets = new List<Secret>() { new(randomSecret.Sha256()) };
+            NewClient.AllowedScopes = new List<string>
             {
-                new ClientSecret
-                {
-                    Value = hashedSecret,
-                    Description = "Auto-generated secret",
-                    Expiration = null // can set an expiration date if wanted
-                }
+                IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "role"
             };
 
-            Client.AllowedScopes = new List<ClientScope>
-            {
-                new ClientScope { Scope = "openid" },
-                new ClientScope { Scope = "profile" },
-                new ClientScope { Scope = "email" },
-                new ClientScope { Scope = "role" }
-            };
+            NewClient.AllowedGrantTypes = GrantTypes.Code;
+            NewClient.RequireClientSecret = true;
+            NewClient.RequirePkce = true;
+            NewClient.AllowPlainTextPkce = false;
 
-            Client.RequirePkce = true;
-            Client.AllowPlainTextPkce = false;
-
-            _context.Clients.Add(Client);
+            _context.Clients.Add(NewClient.ToEntity());
             await _context.SaveChangesAsync();
 
             //shows the Secret on index when the client gets created
