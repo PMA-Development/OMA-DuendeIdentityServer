@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace TestPage.Pages
 {
-    [Authorize(Roles = "Hotline-User")]
+    [Authorize]
     public class PrivacyModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
@@ -42,7 +42,7 @@ namespace TestPage.Pages
                 var accessTokenDecoded = handler.ReadJwtToken(AccessToken);
                 // Use 'accessTokenDecoded.Claims' to view the claims
             }
-
+            //TODO: https://github.com/MitchDorrestijn/identity-server-guide/blob/master/guides/HOW-TO-ADD-ROLES.md
             if (User.IsInRole("Hotline-User"))
             {
                 _logger.LogInformation("User is in the Hotline-User role.");

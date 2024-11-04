@@ -15,7 +15,7 @@ namespace OMA_DuendeIdentityServer
     {
         public static void Main(string[] args)
         {
-            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=Test.IdentityServer.EntityFramework;trusted_connection=yes;";
+            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=Test1.IdentityServer.EntityFramework;trusted_connection=yes;";
             var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
             var builder = WebApplication.CreateBuilder(args);
 

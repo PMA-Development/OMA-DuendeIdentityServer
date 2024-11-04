@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OMA_DuendeIdentityServer.Pages.Account;
+using System.Security.Claims;
 
 namespace OMA_DuendeIdentityServer.Pages.Login;
 
@@ -121,7 +122,9 @@ public class Index : PageModel
                 // issue authentication cookie with subject ID and username
                 var isuser = new IdentityServerUser(user.Id)
                 {
-                    DisplayName = user.UserName
+                    DisplayName = user.UserName,
+                    //AdditionalClaims = new List<Claim> { new Claim("role", "Hotline-User") }
+
                 };
 
                 await HttpContext.SignInAsync(isuser, props);

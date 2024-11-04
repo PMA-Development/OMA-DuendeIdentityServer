@@ -44,7 +44,7 @@ namespace OMA_DuendeIdentityServer.Pages.ClientManagement
                 IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        "roles"
+                        "role"
             };
 
             NewClient.AllowedGrantTypes = GrantTypes.Code;
