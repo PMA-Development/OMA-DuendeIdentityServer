@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Security.Claims;
 
 namespace TestPage
 {
@@ -27,17 +29,42 @@ namespace TestPage
                 options.ResponseType = "code";
                 options.UsePkce = true;
                 options.ResponseMode = "query";
-
+                options.SaveTokens = true;
                 // options.CallbackPath = "/signin-oidc"; // default redirect URI
                 // options.Scope.Add("openid"); // default scope
                 // options.Scope.Add("profile"); // default scope
                 //options.Scope.Add("email"); // default scope
                 //options.Scope.Add("api1.read");
-                
+
                 options.ClaimActions.MapJsonKey("role", "role", "role");
                 options.TokenValidationParameters.RoleClaimType = "role";
                 options.Scope.Add("role");
                 options.SaveTokens = true;
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = ctx =>
+                    {
+                        var claims = ctx.Principal.Claims.ToList();
+                        // Log all claims
+                        foreach (var claim in claims)
+                        {
+                            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+                        }
+
+                        // Optional: Check if test_claim is among the claims
+                        var testClaim = claims.FirstOrDefault(c => c.Type == "test_claim");
+                        if (testClaim != null)
+                        {
+                            Console.WriteLine("Test claim found: " + testClaim.Value);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Test claim not found!");
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             builder.Services.AddAuthorization(options =>
