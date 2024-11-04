@@ -19,9 +19,9 @@ namespace OMA_DuendeIdentityServer
                 },
                 new Client
                 {
-                    ClientId = "oidcClient",
+                    ClientId = "testID2",
                     ClientName = "Example Client Application",
-                    ClientSecrets = new List<Secret> {new Secret("SuperSecretPassword".Sha256())}, // change me!
+                    ClientSecrets = new List<Secret> {new Secret("dVy0aMiQtQso/DErlqKtvlQHYFKUtWW0x5gczU8C6Cs=".Sha256())}, // change me!
     
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = new List<string> {"https://localhost:7176/signin-oidc"},
