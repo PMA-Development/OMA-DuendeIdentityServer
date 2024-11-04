@@ -11,11 +11,7 @@ namespace OMA_DuendeIdentityServer
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResources.Email(),
-            new IdentityResource
-            {
-                Name = "role",
-                UserClaims = new List<string> {"role"}
-            }
+              new IdentityResource("roles", "Your roles", new[] { "role" })
         };
         }
 
@@ -30,7 +26,7 @@ namespace OMA_DuendeIdentityServer
                 Description = "Allow the application to access API #1 on your behalf",
                 Scopes = new List<string> {"api1.read", "api1.write"},
                 ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
-                UserClaims = new List<string> {"role"}
+                UserClaims = new List<string> { "roles" }
             }
         };
         }

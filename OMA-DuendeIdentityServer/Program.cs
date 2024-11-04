@@ -38,7 +38,8 @@ namespace OMA_DuendeIdentityServer
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
                 .AddConfigurationStore(options =>
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
+                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+                 .AddProfileService<ProfileService>();
 
 
 
@@ -53,7 +54,7 @@ namespace OMA_DuendeIdentityServer
                 app.UseHsts();
             }
 
-            //InitializeDbTestData(app);
+            InitializeDbTestData(app);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

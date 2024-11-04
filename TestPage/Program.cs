@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+
 namespace TestPage
 {
     public class Program
@@ -19,18 +21,18 @@ namespace TestPage
             {
                 options.Authority = "https://localhost:5000";
                 options.ClientId = "testID2";
-                options.ClientSecret = "uKKCCAlB8Qys/8QZr/udsR5VfFSpyTKLay/Fa/ngICU=";
+                options.ClientSecret = "OSohVTuFt2mlJYsaDe8SlHdukY1PTzPiWizATDGqwUU=";
 
                 options.ResponseType = "code";
                 options.UsePkce = true;
                 options.ResponseMode = "query";
 
                 // options.CallbackPath = "/signin-oidc"; // default redirect URI
-
-                // options.Scope.Add("oidc"); // default scope
-                // options.Scope.Add("profile"); // default scope
+                options.ClaimActions.MapJsonKey("role", "role", "role");
+                 //options.Scope.Add("openid"); // default scope
+                 //options.Scope.Add("profile"); // default scope
                 //options.Scope.Add("api1.read");
-                options.Scope.Add("role");
+                options.Scope.Add("roles");
                 options.SaveTokens = true;
             });
 
