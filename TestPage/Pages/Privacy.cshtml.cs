@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace TestPage.Pages
 {
-    [Authorize]
+    [Authorize(Roles = "Hotline-User")]
     public class PrivacyModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;

@@ -25,7 +25,7 @@ namespace TestPage
                 options.ClientId = "testID2";
                 options.ClientSecret = "dVy0aMiQtQso/DErlqKtvlQHYFKUtWW0x5gczU8C6Cs=";
                 //options.ClientSecret = "V2VytD2UEenxKbWfWWNENepWTUJvfBjUcZB6kCgELwo=";
-
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.ResponseType = "code";
                 options.UsePkce = true;
                 options.ResponseMode = "query";
