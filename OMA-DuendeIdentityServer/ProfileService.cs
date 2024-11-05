@@ -28,13 +28,12 @@ namespace OMA_DuendeIdentityServer
             // Add roles as claims
             var roleClaims = roles.Select(role => new Claim(JwtClaimTypes.Role, role));
 
-            // Add a test claim
-            var testClaim = new Claim("test_claim", "test_value");
+  
 
             // Include the existing claims and the new role claims
             var claims = context.Subject.Claims.ToList();
             claims.AddRange(roleClaims);
-            claims.Add(testClaim); // Add your test claim here
+
 
             context.IssuedClaims = claims;
         }
