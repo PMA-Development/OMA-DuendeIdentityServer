@@ -35,6 +35,24 @@ namespace OMA_DuendeIdentityServer
                     },
                     RequirePkce = true,
                     AllowPlainTextPkce = false
+                },
+                 new Client
+                {
+                    ClientId = "OMA-Web",
+                    ClientName = "Example Client Application",
+
+                    RequireClientSecret = false,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RedirectUris = new List<string> {"https://localhost:7123/authentication/login-callback"},
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "role",
+                    },
+                    RequirePkce = true,
+                    AllowPlainTextPkce = false
                 }
 
             };
