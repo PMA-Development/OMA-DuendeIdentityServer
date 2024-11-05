@@ -39,7 +39,7 @@ namespace OMA_DuendeIdentityServer
                 .AddConfigurationStore(options =>
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
-                 //.AddProfileService<ProfileService>();
+            //.AddProfileService<ProfileService>();
 
 
 
@@ -63,7 +63,13 @@ namespace OMA_DuendeIdentityServer
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+            }
+            );
 
             app.MapRazorPages();
 
