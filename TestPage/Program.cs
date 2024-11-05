@@ -40,31 +40,6 @@ namespace TestPage
                 options.TokenValidationParameters.RoleClaimType = "role";
                 options.Scope.Add("role");
                 options.SaveTokens = true;
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnTokenValidated = ctx =>
-                    {
-                        var claims = ctx.Principal.Claims.ToList();
-                        // Log all claims
-                        foreach (var claim in claims)
-                        {
-                            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-                        }
-
-                        // Optional: Check if test_claim is among the claims
-                        var testClaim = claims.FirstOrDefault(c => c.Type == "test_claim");
-                        if (testClaim != null)
-                        {
-                            Console.WriteLine("Test claim found: " + testClaim.Value);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Test claim not found!");
-                        }
-
-                        return Task.CompletedTask;
-                    }
-                };
             });
 
             builder.Services.AddAuthorization(options =>
