@@ -38,8 +38,8 @@ namespace OMA_DuendeIdentityServer
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
                 .AddConfigurationStore(options =>
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
-            //.AddProfileService<ProfileService>();
+                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+            .AddProfileService<ProfileService>();
 
 
 
