@@ -45,6 +45,15 @@ namespace OMA_DuendeIdentityServer
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
             .AddProfileService<ProfileService>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.HttpOnly = true;
+            });
+
             //TODO: Hardcoded value to be changed
             builder.Services.AddCors(options =>
             {

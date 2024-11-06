@@ -63,38 +63,22 @@ public class Index : PageModel
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            // if there's no current logout context, we need to create one
-            // this captures necessary info from the current logged in user
-            // this can still return null if there is no context needed
             LogoutId ??= await _interaction.CreateLogoutContextAsync();
-                
-            // delete local authentication cookie
+
+            // Clear cookies
+            ClearAuthenticationCookies();
+
             await HttpContext.SignOutAsync();
-
-            // see if we need to trigger federated logout
-            var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-
-            // raise the logout event
             await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
-            Telemetry.Metrics.UserLogout(idp);
-
-            // if it's a local login we can ignore this workflow
-            if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
-            {
-                // we need to see if the provider supports external logout
-                if (await HttpContext.GetSchemeSupportsSignOutAsync(idp))
-                {
-                    // build a return URL so the upstream provider will redirect back
-                    // to us after the user has logged out. this allows us to then
-                    // complete our single sign-out processing.
-                    var url = Url.Page("/Account/Logout/Loggedout", new { logoutId = LogoutId });
-
-                    // this triggers a redirect to the external provider for sign-out
-                    return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);
-                }
-            }
         }
 
         return RedirectToPage("/Account/Logout/LoggedOut", new { logoutId = LogoutId });
     }
+    private void ClearAuthenticationCookies()
+    {
+        Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        Response.Cookies.Delete("idsrv");
+    }
+
+
 }

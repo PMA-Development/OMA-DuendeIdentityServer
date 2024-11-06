@@ -38,13 +38,14 @@ namespace OMA_DuendeIdentityServer
                 },
                  new Client
                 {
+
                     ClientId = "OMA-Web",
                     ClientName = "Example Client Application",
 
                     RequireClientSecret = false,
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = new List<string> {"https://localhost:7123/authentication/login-callback"},
-                    PostLogoutRedirectUris = new List<string> { "https://localhost:7123/authentication/logout-callback" },
+                      PostLogoutRedirectUris = new List<string> { "https://localhost:7123/authentication/logout-callback" }, // Must match exactly
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
