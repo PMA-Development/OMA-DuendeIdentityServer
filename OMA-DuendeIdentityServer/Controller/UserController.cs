@@ -14,6 +14,7 @@ namespace OMA_DuendeIdentityServer.Controller
             _userManager = userManager;
         }
 
+        
 
         [HttpGet]
         public async Task<IActionResult> Get()

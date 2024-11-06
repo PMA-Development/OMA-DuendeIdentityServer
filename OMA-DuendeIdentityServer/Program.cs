@@ -31,7 +31,11 @@ namespace OMA_DuendeIdentityServer
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddIdentityServer()
+            builder.Services.AddIdentityServer(options =>
+            {
+                options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
+                options.Authentication.CookieSlidingExpiration = true;
+            })
             .AddAspNetIdentity<IdentityUser>()
             .AddOperationalStore(options =>
                     options.ConfigureDbContext = builder =>
