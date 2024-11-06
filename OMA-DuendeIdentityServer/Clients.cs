@@ -69,11 +69,14 @@ namespace OMA_DuendeIdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
+                        "api.read",
                         "role"
                     },
-                    AllowAccessTokensViaBrowser = true,
-                    RequirePkce = true
-     
+
+                    AllowOfflineAccess = true, // Enables the use of refresh tokens
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly, // Recommended setting for better security
+                    RefreshTokenExpiration = TokenExpiration.Sliding
+
                 }
 
             };
