@@ -55,6 +55,23 @@ namespace OMA_DuendeIdentityServer
                     },
                     RequirePkce = true,
                     AllowPlainTextPkce = false
+                },
+                 new Client
+{
+                    ClientId = "OMA-Maui",
+                    ClientName = "MAUI Client Application",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false, 
+                    RedirectUris = new List<string> { "myapp://auth" }, // Use a custom scheme for mobile
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "role"
+                    },
+                    AllowAccessTokensViaBrowser = true
+
                 }
 
             };
