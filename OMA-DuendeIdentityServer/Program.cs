@@ -54,15 +54,23 @@ namespace OMA_DuendeIdentityServer
                 options.Cookie.HttpOnly = true;
             });
 
-            //TODO: Hardcoded value to be changed
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://localhost:7123") // Allow your Blazor app origin
-                                      .AllowAnyMethod()
-                                      .AllowAnyHeader()
-                                      .AllowCredentials()); // If you're sending credentials
+                options.AddPolicy("allow_all",
+                    policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
             });
+            //TODO: Hardcoded value to be changed
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowSpecificOrigin",
+            //        builder => builder.WithOrigins("https://localhost:7123", "http://10.0.2.2") // Allow your Blazor app origin
+            //                          .AllowAnyMethod()
+            //                          .AllowAnyHeader()
+            //                          .AllowCredentials()); // If you're sending credentials
+
+                
+            //});
+
 
 
             var app = builder.Build();
@@ -74,7 +82,7 @@ namespace OMA_DuendeIdentityServer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseCors("AllowSpecificOrigin");
+            app.UseCors("allow_all");
             InitializeDbTestData(app);
 
             app.UseHttpsRedirection();
