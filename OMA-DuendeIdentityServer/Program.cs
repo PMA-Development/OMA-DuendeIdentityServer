@@ -35,6 +35,8 @@ namespace OMA_DuendeIdentityServer
             {
                 options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
                 options.Authentication.CookieSlidingExpiration = true;
+                options.IssuerUri = "https://dlx83tgs-5000.euw.devtunnels.ms";
+                
             })
             .AddAspNetIdentity<IdentityUser>()
             .AddOperationalStore(options =>
