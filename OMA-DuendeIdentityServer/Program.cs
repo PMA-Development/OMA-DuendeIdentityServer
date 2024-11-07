@@ -37,9 +37,10 @@ namespace OMA_DuendeIdentityServer
             {
                 options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
                 options.Authentication.CookieSlidingExpiration = true;
-                options.IssuerUri = "https://v8c0dbnw-5000.euw.devtunnels.ms";
+                //options.IssuerUri =https://v8c0dbnw-5000.euw.devtunnels.ms  for school
+                options.IssuerUri = "https://ld1x53md-5000.euw.devtunnels.ms"; // FOR HOME
             })
-                .AddCorsPolicyService<InMemoryCorsPolicyService>()
+            //.AddCorsPolicyService<InMemoryCorsPolicyService>()
             .AddAspNetIdentity<IdentityUser>()
             .AddOperationalStore(options =>
                     options.ConfigureDbContext = builder =>
@@ -47,8 +48,8 @@ namespace OMA_DuendeIdentityServer
                 .AddConfigurationStore(options =>
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
-            .AddProfileService<ProfileService>()
-            .AddJwtBearerClientAuthentication();
+            .AddProfileService<ProfileService>();
+            //.AddJwtBearerClientAuthentication();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -69,7 +70,7 @@ namespace OMA_DuendeIdentityServer
                 });
             });
 
-   
+
 
 
 
@@ -100,15 +101,15 @@ namespace OMA_DuendeIdentityServer
             app.UseCors("AllowSpecificOrigin");
             InitializeDbTestData(app);
 
-            //app.Use(async (ctx, next) =>
-            //{
+#if DEBUG
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Request.Scheme = "https";
+                ctx.Request.Host = new HostString("ld1x53md-5000.euw.devtunnels.ms");
 
-            //    ctx.Request.Scheme = "https";
-            //    ctx.Request.Host = new HostString("v8c0dbnw-5000.euw.devtunnels.ms");
-
-            //    await next();
-            //});
-
+                await next();
+            });
+#endif
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
