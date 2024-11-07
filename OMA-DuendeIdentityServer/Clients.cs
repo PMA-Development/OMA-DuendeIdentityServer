@@ -44,8 +44,16 @@ namespace OMA_DuendeIdentityServer
 
                     RequireClientSecret = false,
                     AllowedGrantTypes = GrantTypes.Code,
-                    RedirectUris = new List<string> {"https://localhost:7123/authentication/login-callback"},
-                      PostLogoutRedirectUris = new List<string> { "https://localhost:7123/authentication/logout-callback" }, // Must match exactly
+                    RedirectUris = new List<string>
+                    {
+                        "https://localhost:7123/authentication/login-callback",
+                        "https://v8c0dbnw-7123.euw.devtunnels.ms/authentication/login-callback"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "https://localhost:7123/authentication/logout-callback",
+                        "https://v8c0dbnw-7123.euw.devtunnels.ms/authentication/logout-callback"
+                    },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -53,6 +61,7 @@ namespace OMA_DuendeIdentityServer
                         IdentityServerConstants.StandardScopes.Email,
                         "role",
                     },
+                    AllowedCorsOrigins = { "https://localhost:7123" },
                     RequirePkce = true,
                     AllowPlainTextPkce = false
                 },
@@ -60,16 +69,15 @@ namespace OMA_DuendeIdentityServer
 {
                     ClientId = "OMA-Maui",
                     ClientName = "MAUI Client Application",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     RequireClientSecret = false,
-                    RedirectUris = { "myapp://" },
-                    PostLogoutRedirectUris = { "myapp://" },
+                    RedirectUris = { "myapp://auth" },
+                    PostLogoutRedirectUris = { "mmyapp://auth" },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        "api.read",
                         "role"
                     },
 

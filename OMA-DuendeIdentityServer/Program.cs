@@ -1,6 +1,7 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Test;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ namespace OMA_DuendeIdentityServer
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=Test1.IdentityServer.EntityFramework;trusted_connection=yes;";
@@ -35,9 +37,9 @@ namespace OMA_DuendeIdentityServer
             {
                 options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
                 options.Authentication.CookieSlidingExpiration = true;
-                options.IssuerUri = "https://dlx83tgs-5000.euw.devtunnels.ms";
-                
+                options.IssuerUri = "https://v8c0dbnw-5000.euw.devtunnels.ms";
             })
+                .AddCorsPolicyService<InMemoryCorsPolicyService>()
             .AddAspNetIdentity<IdentityUser>()
             .AddOperationalStore(options =>
                     options.ConfigureDbContext = builder =>
@@ -45,7 +47,8 @@ namespace OMA_DuendeIdentityServer
                 .AddConfigurationStore(options =>
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
-            .AddProfileService<ProfileService>();
+            .AddProfileService<ProfileService>()
+            .AddJwtBearerClientAuthentication();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -58,9 +61,19 @@ namespace OMA_DuendeIdentityServer
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("allow_all",
-                    policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+                options.AddPolicy("AllowSpecificOrigin", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7123")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
             });
+
+   
+
+
+
+
             //TODO: Hardcoded value to be changed
             //builder.Services.AddCors(options =>
             //{
@@ -70,7 +83,7 @@ namespace OMA_DuendeIdentityServer
             //                          .AllowAnyHeader()
             //                          .AllowCredentials()); // If you're sending credentials
 
-                
+
             //});
 
 
@@ -84,8 +97,17 @@ namespace OMA_DuendeIdentityServer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseCors("allow_all");
+            app.UseCors("AllowSpecificOrigin");
             InitializeDbTestData(app);
+
+            //app.Use(async (ctx, next) =>
+            //{
+
+            //    ctx.Request.Scheme = "https";
+            //    ctx.Request.Host = new HostString("v8c0dbnw-5000.euw.devtunnels.ms");
+
+            //    await next();
+            //});
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
