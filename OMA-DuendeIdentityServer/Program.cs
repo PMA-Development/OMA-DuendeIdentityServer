@@ -17,10 +17,12 @@ namespace OMA_DuendeIdentityServer
 
         public static void Main(string[] args)
         {
-            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=Test1.IdentityServer.EntityFramework;trusted_connection=yes;";
+            
             var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
             var builder = WebApplication.CreateBuilder(args);
 
+            var connectionString = builder.Configuration.GetConnectionString("IdentityServerDatabase")
+                        ?? throw new InvalidOperationException("The connection string 'IdentityServerDatabase' was not found in the configuration.");
 
             // Add services to the container.
             builder.Services.AddRazorPages();
