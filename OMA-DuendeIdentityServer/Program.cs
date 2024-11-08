@@ -39,10 +39,7 @@ namespace OMA_DuendeIdentityServer
             {
                 options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
                 options.Authentication.CookieSlidingExpiration = true;
-                //options.IssuerUri =https://v8c0dbnw-5000.euw.devtunnels.ms  for school
-                //options.IssuerUri = "https://ld1x53md-5000.euw.devtunnels.ms"; // FOR HOME
             })
-            //.AddCorsPolicyService<InMemoryCorsPolicyService>()
             .AddAspNetIdentity<IdentityUser>()
             .AddOperationalStore(options =>
                     options.ConfigureDbContext = builder =>
@@ -51,7 +48,7 @@ namespace OMA_DuendeIdentityServer
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
             .AddProfileService<ProfileService>();
-            //.AddJwtBearerClientAuthentication();
+       
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -75,22 +72,6 @@ namespace OMA_DuendeIdentityServer
 
 
 
-
-
-            //TODO: Hardcoded value to be changed
-            //builder.Services.AddCors(options =>
-            //{
-            //    options.AddPolicy("AllowSpecificOrigin",
-            //        builder => builder.WithOrigins("https://localhost:7123", "http://10.0.2.2") // Allow your Blazor app origin
-            //                          .AllowAnyMethod()
-            //                          .AllowAnyHeader()
-            //                          .AllowCredentials()); // If you're sending credentials
-
-
-            //});
-
-
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -103,15 +84,7 @@ namespace OMA_DuendeIdentityServer
             app.UseCors("AllowSpecificOrigin");
             InitializeDbTestData(app);
 
-#if DEBUG
-            //app.Use(async (ctx, next) =>
-            //{
-            //    ctx.Request.Scheme = "https";
-            //    ctx.Request.Host = new HostString("ld1x53md-5000.euw.devtunnels.ms");
 
-            //    await next();
-            //});
-#endif
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
