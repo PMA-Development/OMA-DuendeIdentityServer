@@ -82,7 +82,7 @@ namespace OMA_DuendeIdentityServer
                 app.UseHsts();
             }
             app.UseCors("AllowSpecificOrigin");
-            InitializeDbTestData(app);
+            InitializeDbData(app);
 
 
             app.UseHttpsRedirection();
@@ -106,7 +106,7 @@ namespace OMA_DuendeIdentityServer
         }
 
 
-        private static void InitializeDbTestData(IApplicationBuilder app)
+        private static void InitializeDbData(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
