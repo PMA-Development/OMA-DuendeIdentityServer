@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using OMA_DuendeIdentityServer.Models;
 using System.Reflection;
 
@@ -27,6 +28,28 @@ namespace OMA_DuendeIdentityServer
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
+
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo 
+                { 
+                    Title = "OMA User API", 
+                    Version = "v1", 
+                    Description = "This is the OMA User API, designed to manage user operations and roles"
+                });
+                try
+                {
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    c.IncludeXmlComments(xmlPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Swagger XML comments file error: {ex.Message}");
+                }
+            });
+
 
             builder.Services.AddDbContext<ApplicationDbContext>(builder =>
                 builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
@@ -57,6 +80,8 @@ namespace OMA_DuendeIdentityServer
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                //options.Cookie.Expiration = TimeSpan.FromHours(8);
             });
 
             builder.Services.AddCors(options =>
@@ -82,6 +107,16 @@ namespace OMA_DuendeIdentityServer
                 app.UseHsts();
             }
             app.UseCors("AllowSpecificOrigin");
+
+#if DEBUG
+            // Enable Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OMA API v1");
+                c.RoutePrefix = "swagger";
+            });
+#endif
             InitializeDbData(app);
 
 

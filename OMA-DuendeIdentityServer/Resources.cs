@@ -15,15 +15,9 @@ namespace OMA_DuendeIdentityServer
                 {
                     Name = "role",
                     UserClaims = new List<string> {"role"},
-                    
+
                 }
-                
-            //return new[]
-            //{
-            //new IdentityResources.OpenId(),
-            //new IdentityResources.Profile(),
-            //new IdentityResources.Email(),
-            //  new IdentityResource("role", "Your roles", new[] { "role" })
+
         };
         }
 

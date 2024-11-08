@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OMA_DuendeIdentityServer.Controller
@@ -14,33 +13,74 @@ namespace OMA_DuendeIdentityServer.Controller
             _userManager = userManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser()
+        /// <summary>
+        /// Creates a new user with the specified username and email.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint creates a user and assigns them to the "Hotline-User" role.
+        /// </remarks>
+        /// <response code="200">Returns OK if the user was created successfully</response>
+        /// <response code="400">Returns BadRequest if there was an error creating the user</response>
+        public async Task<IActionResult> CreateUser(string username, string email, string password)
         {
-            IdentityUser identityUser = new() { UserName = "", Email = "" };
+            //TODO: Add validation for username, email, and password
+            //TODO: Make UserDTO class to handle user data
+            if (await _userManager.FindByNameAsync(username) != null || await _userManager.FindByEmailAsync(email) != null)
+            {
+                return BadRequest("A user with this username or email already exists.");
+            }
 
-            await _userManager.CreateAsync(identityUser, ""); //TODO: make this password
+            IdentityUser identityUser = new() { UserName = username, Email = email };
+            var result = await _userManager.CreateAsync(identityUser, password);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest("Failed to create user.");
+            }
+
             await _userManager.AddToRoleAsync(identityUser, "Hotline-User");
-            return Ok();
+            return Ok("User created successfully.");
         }
 
-        //TODO: What do we update?
-        [HttpPatch]
+
+
+        /// <summary>
+        /// Updates a user's information.
+        /// </summary>
+        [HttpPatch("UpdateUser")]
         public async Task<IActionResult> UpdateUser()
         {
-            
             return Ok();
         }
-        //TODO: WIP
-        [HttpPatch]
+
+        /// <summary>
+        /// Adds a specified role to a user.
+        /// </summary>
+        [HttpPatch("AddRoleToUser")]
         public async Task<IActionResult> AddRoleToUser()
         {
-           await _userManager.AddToRoleAsync(await _userManager.FindByIdAsync(""), "");
-
+            await _userManager.AddToRoleAsync(await _userManager.FindByIdAsync(""), "");
             return Ok();
         }
+
+        /// <summary>
+        /// Resets a user's password.
+        /// </summary>
+        [HttpPut]
+        public async Task<IActionResult> ResetPassword()
+        {
+            IdentityUser identityUser = await _userManager.FindByIdAsync("");
+            await _userManager.RemovePasswordAsync(identityUser);
+            await _userManager.AddPasswordAsync(identityUser, "");
+            return Ok();
+        }
+
+        /// <summary>
+        /// Retrieves a list of all users.
+        /// </summary>
+        /// <returns>A list of users with their IDs, usernames, and emails</returns>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetUsers()
         {
             var users = _userManager.Users;
             var userList = new List<IdentityUser>();
