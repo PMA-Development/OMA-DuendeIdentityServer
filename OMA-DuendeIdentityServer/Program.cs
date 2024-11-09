@@ -1,11 +1,7 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Test;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,21 +14,96 @@ namespace OMA_DuendeIdentityServer
 {
     public class Program
     {
-
         public static void Main(string[] args)
         {
-
-            var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
             var builder = WebApplication.CreateBuilder(args);
+            ConfigureDatabaseConnection(builder);
+            RegisterCoreServices(builder);
+            ConfigureIdentityAndIdentityServer(builder);
+            ConfigureAuthenticationAndAuthorization(builder);
+            ConfigureSwagger(builder);
 
+            var app = builder.Build();
+            ConfigurePipeline(app);
+            InitializeDbData(app);
+
+            app.Run();
+        }
+
+
+        private static void ConfigureDatabaseConnection(WebApplicationBuilder builder)
+        {
             var connectionString = builder.Configuration.GetConnectionString("IdentityServerDatabase")
-                        ?? throw new InvalidOperationException("The connection string 'IdentityServerDatabase' was not found in the configuration.");
+                                ?? throw new InvalidOperationException("The connection string 'IdentityServerDatabase' was not found.");
+            var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
-            // Add services to the container.
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
+        }
+
+
+        private static void RegisterCoreServices(WebApplicationBuilder builder)
+        {
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7123")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+        }
 
 
+        private static void ConfigureIdentityAndIdentityServer(WebApplicationBuilder builder)
+        {
+            var connectionString = builder.Configuration.GetConnectionString("IdentityServerDatabase");
+            var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddIdentityServer(options =>
+            {
+                options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
+                options.Authentication.CookieSlidingExpiration = true;
+            })
+            .AddAspNetIdentity<IdentityUser>()
+            .AddOperationalStore(options =>
+                options.ConfigureDbContext = db => db.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+            .AddConfigurationStore(options =>
+                options.ConfigureDbContext = db => db.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+            .AddProfileService<ProfileService>();
+        }
+
+
+        private static void ConfigureAuthenticationAndAuthorization(WebApplicationBuilder builder)
+        {
+            builder.Services.AddAuthentication()
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = builder.Configuration["IdentityServer:Authority"];
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        NameClaimType = "name"
+                    };
+                });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("HotlineUserOnly", policy => policy.RequireRole("Hotline-User"));
+            });
+        }
+
+   
+        private static void ConfigureSwagger(WebApplicationBuilder builder)
+        {
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -52,70 +123,20 @@ namespace OMA_DuendeIdentityServer
                     Console.WriteLine($"Swagger XML comments file error: {ex.Message}");
                 }
             });
+        }
 
-
-            builder.Services.AddDbContext<ApplicationDbContext>(builder =>
-                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)));
-
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            builder.Services.AddIdentityServer(options =>
-            {
-                options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
-                options.Authentication.CookieSlidingExpiration = true;
-            })
-            .AddAspNetIdentity<IdentityUser>()
-            .AddOperationalStore(options =>
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
-                .AddConfigurationStore(options =>
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
-            .AddProfileService<ProfileService>();
-
-            builder.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = builder.Configuration["IdentityServer:Authority"]; // IdentityServer URL
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false, // Matches claim type for roles
-                    NameClaimType = "name"
-                };
-            });
-            // Define role-based authorization policies
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("HotlineUserOnly", policy => policy.RequireRole("Hotline-User"));
-            });
-
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowSpecificOrigin", policy =>
-                {
-                    policy.WithOrigins("https://localhost:7123")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
-            });
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
+    
+        private static void ConfigurePipeline(WebApplication app)
+        {
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseCors("AllowSpecificOrigin");
 
 #if DEBUG
-            // Enable Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -123,8 +144,6 @@ namespace OMA_DuendeIdentityServer
                 c.RoutePrefix = "swagger";
             });
 #endif
-            InitializeDbData(app);
-
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -138,6 +157,7 @@ namespace OMA_DuendeIdentityServer
                 await next();
             });
 #endif
+
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -147,61 +167,64 @@ namespace OMA_DuendeIdentityServer
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
-            }
-            );
-
-
-            app.MapRazorPages();
-
-            app.Run();
+            });
         }
 
 
         private static void InitializeDbData(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            MigrateDatabases(serviceScope);
+            SeedIdentityServerData(serviceScope);
+        }
+
+      
+        private static void MigrateDatabases(IServiceScope serviceScope)
+        {
+            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+            serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+            serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+        }
+
+    
+        private static void SeedIdentityServerData(IServiceScope serviceScope)
+        {
+            var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
+            if (!context.Clients.Any())
             {
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-                serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
-                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
-
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-
-                if (!context.Clients.Any())
+                foreach (var client in Clients.Get())
                 {
-                    foreach (var client in Clients.Get())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
+                    context.Clients.Add(client.ToEntity());
                 }
+                context.SaveChanges();
+            }
 
-                if (!context.IdentityResources.Any())
+            if (!context.IdentityResources.Any())
+            {
+                foreach (var resource in Resources.GetIdentityResources())
                 {
-                    foreach (var resource in Resources.GetIdentityResources())
-                    {
-                        context.IdentityResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
+                    context.IdentityResources.Add(resource.ToEntity());
                 }
+                context.SaveChanges();
+            }
 
-                if (!context.ApiScopes.Any())
+            if (!context.ApiScopes.Any())
+            {
+                foreach (var scope in Resources.GetApiScopes())
                 {
-                    foreach (var scope in Resources.GetApiScopes())
-                    {
-                        context.ApiScopes.Add(scope.ToEntity());
-                    }
-                    context.SaveChanges();
+                    context.ApiScopes.Add(scope.ToEntity());
                 }
+                context.SaveChanges();
+            }
 
-                if (!context.ApiResources.Any())
+            if (!context.ApiResources.Any())
+            {
+                foreach (var resource in Resources.GetApiResources())
                 {
-                    foreach (var resource in Resources.GetApiResources())
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
+                    context.ApiResources.Add(resource.ToEntity());
                 }
+                context.SaveChanges();
             }
         }
     }
