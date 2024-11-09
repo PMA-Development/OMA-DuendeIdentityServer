@@ -3,10 +3,13 @@ using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Test;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OMA_DuendeIdentityServer.Models;
 using System.Reflection;
@@ -18,7 +21,7 @@ namespace OMA_DuendeIdentityServer
 
         public static void Main(string[] args)
         {
-            
+
             var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
             var builder = WebApplication.CreateBuilder(args);
 
@@ -32,10 +35,10 @@ namespace OMA_DuendeIdentityServer
 
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo 
-                { 
-                    Title = "OMA User API", 
-                    Version = "v1", 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "OMA User API",
+                    Version = "v1",
                     Description = "This is the OMA User API, designed to manage user operations and roles"
                 });
                 try
@@ -71,18 +74,24 @@ namespace OMA_DuendeIdentityServer
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
             .AddProfileService<ProfileService>();
-       
 
-            builder.Services.ConfigureApplicationCookie(options =>
+            builder.Services.AddAuthentication()
+            .AddJwtBearer(options =>
             {
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(8);
-                //options.Cookie.Expiration = TimeSpan.FromHours(8);
+                options.Authority = builder.Configuration["IdentityServer:Authority"]; // IdentityServer URL
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false, // Matches claim type for roles
+                    NameClaimType = "name"
+                };
             });
+            // Define role-based authorization policies
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("HotlineUserOnly", policy => policy.RequireRole("Hotline-User"));
+            });
+
 
             builder.Services.AddCors(options =>
             {
@@ -93,9 +102,6 @@ namespace OMA_DuendeIdentityServer
                           .AllowAnyMethod();
                 });
             });
-
-
-
 
             var app = builder.Build();
 
@@ -124,7 +130,16 @@ namespace OMA_DuendeIdentityServer
             app.UseStaticFiles();
             app.UseRouting();
 
+#if DEBUG
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Headers["Authorization"];
+                Console.WriteLine($"Authorization Header: {token} time: {DateTime.Now}");
+                await next();
+            });
+#endif
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -134,6 +149,7 @@ namespace OMA_DuendeIdentityServer
                 endpoints.MapRazorPages();
             }
             );
+
 
             app.MapRazorPages();
 
@@ -185,21 +201,6 @@ namespace OMA_DuendeIdentityServer
                         context.ApiResources.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
-                }
-
-                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                if (!userManager.Users.Any())
-                {
-                    foreach (var testUser in Users.Get())
-                    {
-                        var identityUser = new IdentityUser(testUser.Username)
-                        {
-                            Id = testUser.SubjectId
-                        };
-
-                        userManager.CreateAsync(identityUser, "Password123!").Wait();
-                        userManager.AddClaimsAsync(identityUser, testUser.Claims.ToList()).Wait();
-                    }
                 }
             }
         }

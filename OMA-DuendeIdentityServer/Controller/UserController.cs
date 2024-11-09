@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace OMA_DuendeIdentityServer.Controller
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "HotlineUserOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -21,6 +25,7 @@ namespace OMA_DuendeIdentityServer.Controller
         /// </remarks>
         /// <response code="200">Returns OK if the user was created successfully</response>
         /// <response code="400">Returns BadRequest if there was an error creating the user</response>
+        [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser(string username, string email, string password)
         {
             //TODO: Add validation for username, email, and password
@@ -42,7 +47,19 @@ namespace OMA_DuendeIdentityServer.Controller
             return Ok("User created successfully.");
         }
 
+        [HttpGet("claims")]
+        public IActionResult GetClaims()
+        {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value });
+            return Ok(claims);
+        }
 
+        [HttpGet("role-check")]
+        public IActionResult CheckRole()
+        {
+            bool isHotlineUser = User.IsInRole("Hotline-User");
+            return Ok(new { IsHotlineUser = isHotlineUser });
+        }
 
         /// <summary>
         /// Updates a user's information.
@@ -75,10 +92,15 @@ namespace OMA_DuendeIdentityServer.Controller
             return Ok();
         }
 
+
+
+
         /// <summary>
         /// Retrieves a list of all users.
         /// </summary>
         /// <returns>A list of users with their IDs, usernames, and emails</returns>
+
+
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
