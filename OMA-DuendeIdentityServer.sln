@@ -5,8 +5,6 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMA-DuendeIdentityServer", "OMA-DuendeIdentityServer\OMA-DuendeIdentityServer.csproj", "{C66E9526-9106-4596-9B42-913F2C3E3C30}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPage", "TestPage\TestPage.csproj", "{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{C66E9526-9106-4596-9B42-913F2C3E3C30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C66E9526-9106-4596-9B42-913F2C3E3C30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C66E9526-9106-4596-9B42-913F2C3E3C30}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13F5D8AE-F285-4BBE-A71B-4928C4BCB031}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

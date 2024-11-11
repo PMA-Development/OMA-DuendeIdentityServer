@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using OMA_DuendeIdentityServer.Entity;
 
 namespace OMA_DuendeIdentityServer.Pages.Account.Create;
 
@@ -17,7 +18,7 @@ namespace OMA_DuendeIdentityServer.Pages.Account.Create;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IIdentityServerInteractionService _interaction;
 
@@ -26,7 +27,7 @@ public class Index : PageModel
 
     public Index(
         IIdentityServerInteractionService interaction,
-        UserManager<IdentityUser>? userManager = null,
+        UserManager<User>? userManager = null,
         RoleManager<IdentityRole>? roleManager = null)
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
@@ -81,8 +82,8 @@ public class Index : PageModel
 
         if (ModelState.IsValid)
         {
-            PasswordHasher<IdentityUser> passwordHasher = new();
-            IdentityUser identityUser = new() { UserName = Input.Username, Email = Input.Email, EmailConfirmed = true};
+            PasswordHasher<User> passwordHasher = new();
+            User identityUser = new() { UserName = Input.Username, Email = Input.Email, EmailConfirmed = true};
             identityUser.PasswordHash = passwordHasher.HashPassword(identityUser, Input.Password!);
             
             var user = await _userManager.CreateAsync(identityUser);

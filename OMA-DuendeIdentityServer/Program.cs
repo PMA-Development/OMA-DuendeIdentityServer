@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OMA_DuendeIdentityServer.Entity;
 using OMA_DuendeIdentityServer.Models;
 using System.Reflection;
 
@@ -63,7 +64,7 @@ namespace OMA_DuendeIdentityServer
             var connectionString = builder.Configuration.GetConnectionString("IdentityServerDatabase");
             var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -72,7 +73,7 @@ namespace OMA_DuendeIdentityServer
                 options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
                 options.Authentication.CookieSlidingExpiration = true;
             })
-            .AddAspNetIdentity<IdentityUser>()
+            .AddAspNetIdentity<User>()
             .AddOperationalStore(options =>
                 options.ConfigureDbContext = db => db.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
             .AddConfigurationStore(options =>
@@ -110,7 +111,19 @@ namespace OMA_DuendeIdentityServer
                 {
                     Title = "OMA User API",
                     Version = "v1",
-                    Description = "This is the OMA User API, designed to manage user operations and roles"
+                    Description = "This is the OMA User API, designed to manage user operations and roles",
+                    
+                    
+                    
+                });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter 'Bearer' followed by your JWT token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
                 });
                 try
                 {

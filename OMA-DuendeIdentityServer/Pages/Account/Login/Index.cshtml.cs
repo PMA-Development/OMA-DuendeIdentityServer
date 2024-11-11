@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using OMA_DuendeIdentityServer.Entity;
 using OMA_DuendeIdentityServer.Pages.Account;
 using System.Security.Claims;
 
@@ -21,7 +22,7 @@ namespace OMA_DuendeIdentityServer.Pages.Login;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly SignInManager<User> _signInManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
@@ -37,7 +38,7 @@ public class Index : PageModel
         IAuthenticationSchemeProvider schemeProvider,
         IIdentityProviderStore identityProviderStore,
         IEventService events,
-        SignInManager<IdentityUser>? signInManager = null)
+        SignInManager<User>? signInManager = null)
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
         _signInManager = signInManager ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");

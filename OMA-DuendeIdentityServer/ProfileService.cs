@@ -2,15 +2,16 @@
 using Duende.IdentityServer.Services;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
+using OMA_DuendeIdentityServer.Entity;
 using System.Security.Claims;
 
 namespace OMA_DuendeIdentityServer
 {
     public class ProfileService : IProfileService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public ProfileService(UserManager<IdentityUser> userManager)
+        public ProfileService(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
