@@ -54,7 +54,7 @@ namespace OMA_DuendeIdentityServer
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     RequireClientSecret = false,
                     RedirectUris = { "myapp://auth" },
-                    PostLogoutRedirectUris = { "mmyapp://auth" },
+                    PostLogoutRedirectUris = { "myapp://auth" },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

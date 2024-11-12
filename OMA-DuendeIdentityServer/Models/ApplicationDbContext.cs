@@ -71,7 +71,7 @@ namespace OMA_DuendeIdentityServer.Models
                 },
                 new IdentityUserRole<string> 
                 {
-                    RoleId = adminRole.Id,
+                    RoleId = hotlineUserRole.Id,
                     UserId = adminUser.Id
                 },
 
