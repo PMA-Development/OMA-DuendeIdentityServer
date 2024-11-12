@@ -34,7 +34,7 @@ namespace OMA_DuendeIdentityServer.Models
             // Define admin user
             var adminUser = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "c6936336-4a10-4445-b373-60f6a37a58c4",
                 UserName = "adminUser",
                 NormalizedUserName = "ADMINUSER",
                 Email = "admin@example.com",
@@ -48,7 +48,7 @@ namespace OMA_DuendeIdentityServer.Models
             // Define hotline user
             var hotlineUser = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "cf9844c4-55aa-4eef-bba2-9b97771a8c29",
                 UserName = "hotlineUser",
                 NormalizedUserName = "HOTLINEUSER",
                 Email = "hotlineuser@example.com",
@@ -69,6 +69,12 @@ namespace OMA_DuendeIdentityServer.Models
                     RoleId = adminRole.Id,
                     UserId = adminUser.Id
                 },
+                new IdentityUserRole<string> 
+                {
+                    RoleId = adminRole.Id,
+                    UserId = adminUser.Id
+                },
+
                 new IdentityUserRole<string>
                 {
                     RoleId = hotlineUserRole.Id,

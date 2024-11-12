@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace OMA_DuendeIdentityServer.Controller
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
