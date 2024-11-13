@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OMA_DuendeIdentityServer.DTO;
 using OMA_DuendeIdentityServer.Entity;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace OMA_DuendeIdentityServer.Controller
 {
@@ -34,6 +35,13 @@ namespace OMA_DuendeIdentityServer.Controller
             if (string.IsNullOrEmpty(userDTO.Email) || string.IsNullOrEmpty(userDTO.Password))
             {
                 return BadRequest("Email and password are required.");
+            }
+
+            if (userDTO.Password.Length < 8 ||
+               !Regex.IsMatch(userDTO.Password, @"[!@#$%^&*(),.?""{}|<>]") || // Special character
+               !Regex.IsMatch(userDTO.Password, @"\d")) // Digit
+            {
+                return BadRequest("Password must be at least 8 characters long and contain at least one special character and one number.");
             }
 
             if (await _userManager.FindByEmailAsync(userDTO.Email) != null)
@@ -95,8 +103,16 @@ namespace OMA_DuendeIdentityServer.Controller
             if (!string.IsNullOrEmpty(userDTO.Phone))
                 identityUser.PhoneNumber = userDTO.Phone;
 
+
+
             if (!string.IsNullOrEmpty(userDTO.Password))
             {
+                if (userDTO.Password.Length < 8 ||
+              !Regex.IsMatch(userDTO.Password, @"[!@#$%^&*(),.?""{}|<>]") || // Special character
+              !Regex.IsMatch(userDTO.Password, @"\d")) // Digit
+                    return BadRequest("Password must be at least 8 characters long and contain at least one special character and one number.");
+                
+
                 var passwordHasher = new PasswordHasher<User>();
                 identityUser.PasswordHash = passwordHasher.HashPassword(identityUser, userDTO.Password);
             }
