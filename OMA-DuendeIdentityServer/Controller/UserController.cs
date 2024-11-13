@@ -31,14 +31,13 @@ namespace OMA_DuendeIdentityServer.Controller
         public async Task<IActionResult> CreateUser(UserDTO userDTO)
         {
             if (string.IsNullOrEmpty(userDTO.Email) || string.IsNullOrEmpty(userDTO.Password))
-            {
                 return BadRequest("Email and password are required.");
-            }
+            
 
             if (await _userManager.FindByEmailAsync(userDTO.Email) != null)
-            {
                 return BadRequest("A user with this email already exists.");
-            }
+            
+
             PasswordHasher<User> passwordHasher = new();
             var username = userDTO.Email.Split('@')[0];
             User identityUser = new() { UserName = username, Email = userDTO.Email, PhoneNumber = userDTO.Phone, FullName = userDTO.FullName };
@@ -46,15 +45,14 @@ namespace OMA_DuendeIdentityServer.Controller
             var result = await _userManager.CreateAsync(identityUser, userDTO.Password);
 
             if (!result.Succeeded)
-            {
                 return BadRequest("Failed to create user.");
-            }
+            
 
             await _userManager.AddToRoleAsync(identityUser, "Hotline-User");
             return Ok(identityUser.Id);
         }
 
-
+#if DEBUG
         [HttpGet("claims")]
         public IActionResult GetClaims()
         {
@@ -68,6 +66,8 @@ namespace OMA_DuendeIdentityServer.Controller
             bool Admin = User.IsInRole("Admin");
             return Ok(new { Admin = Admin });
         }
+
+#endif
         /// <summary>
         /// Updates a user's information.
         /// </summary>
@@ -102,12 +102,42 @@ namespace OMA_DuendeIdentityServer.Controller
 
             var result = await _userManager.UpdateAsync(identityUser);
             if (!result.Succeeded)
-            {
                 return BadRequest("Failed to update user.");
-            }
+            
 
             return Ok("User updated successfully.");
         }
+
+        /// <summary>
+        /// Deletes a user by their ID.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint deletes a user based on the provided user ID.
+        /// </remarks>
+        /// <param name="id">The ID of the user to delete</param>
+        /// <response code="200">Returns OK if the user was deleted successfully</response>
+        /// <response code="404">Returns NotFound if the user does not exist</response>
+        /// <response code="400">Returns BadRequest if there was an error deleting the user</response>
+        [HttpDelete("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+
+            var user = await _userManager.FindByIdAsync(id);
+
+
+            if (user == null)
+                return NotFound("User not found.");
+            
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+                return BadRequest("Failed to delete user.");
+            
+
+            return Ok("User deleted successfully.");
+        }
+
 
         /// <summary>
         /// Toggles the "Admin" role for a specified user. 
@@ -160,9 +190,8 @@ namespace OMA_DuendeIdentityServer.Controller
             var result = await _userManager.AddPasswordAsync(identityUser, newPassword);
 
             if (!result.Succeeded)
-            {
                 return BadRequest("Failed to reset password.");
-            }
+            
 
             return Ok("Password reset successfully.");
         }
