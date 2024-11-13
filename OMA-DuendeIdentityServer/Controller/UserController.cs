@@ -29,7 +29,6 @@ namespace OMA_DuendeIdentityServer.Controller
         /// <response code="200">Returns OK if the user was created successfully</response>
         /// <response code="400">Returns BadRequest if there was an error creating the user</response>
         [HttpPost("CreateUser")]
-        [Produces<Guid>]
         public async Task<IActionResult> CreateUser(UserDTO userDTO)
         {
             if (string.IsNullOrEmpty(userDTO.Email) || string.IsNullOrEmpty(userDTO.Password))
@@ -50,7 +49,7 @@ namespace OMA_DuendeIdentityServer.Controller
             }
             PasswordHasher<User> passwordHasher = new();
             var username = userDTO.Email.Split('@')[0];
-            User identityUser = new() { UserName = username, Email = userDTO.Email, PhoneNumber = userDTO.Phone, FullName = userDTO.FullName };
+            User identityUser = new() { Id = userDTO.Id.ToString(), UserName = username, Email = userDTO.Email, PhoneNumber = userDTO.Phone, FullName = userDTO.FullName };
             passwordHasher.HashPassword(identityUser, userDTO.Password);
             var result = await _userManager.CreateAsync(identityUser, userDTO.Password);
 
@@ -60,7 +59,7 @@ namespace OMA_DuendeIdentityServer.Controller
             }
 
             await _userManager.AddToRoleAsync(identityUser, "Hotline-User");
-            return Ok(identityUser.Id);
+            return Ok("User has been created");
         }
 
 
