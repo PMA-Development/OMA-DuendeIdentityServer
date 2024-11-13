@@ -28,6 +28,7 @@ namespace OMA_DuendeIdentityServer.Controller
         /// <response code="200">Returns OK if the user was created successfully</response>
         /// <response code="400">Returns BadRequest if there was an error creating the user</response>
         [HttpPost("CreateUser")]
+        [Produces<Guid>]
         public async Task<IActionResult> CreateUser(UserDTO userDTO)
         {
             if (string.IsNullOrEmpty(userDTO.Email) || string.IsNullOrEmpty(userDTO.Password))
