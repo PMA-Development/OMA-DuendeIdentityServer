@@ -10,14 +10,6 @@ namespace OMA_DuendeIdentityServer
             int seconds = 8 * 3600;
             return new List<Client>
             {
-                new Client
-                {
-                    ClientId = "oauthClient",
-                    ClientName = "Example client application using client credentials",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = new List<Secret> {new Secret("SuperSecretPassword".Sha256())}, // change me!
-                    AllowedScopes = new List<string> {"api1.read"}
-                },
                  new Client
                 {
 
@@ -29,12 +21,10 @@ namespace OMA_DuendeIdentityServer
                     RedirectUris = new List<string>
                     {
                         "https://localhost:7123/authentication/login-callback",
-                        "https://v8c0dbnw-7123.euw.devtunnels.ms/authentication/login-callback"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
                         "https://localhost:7123/authentication/logout-callback",
-                        "https://v8c0dbnw-7123.euw.devtunnels.ms/authentication/logout-callback"
                     },
                     AllowedScopes = new List<string>
                     {
@@ -63,8 +53,8 @@ namespace OMA_DuendeIdentityServer
                         "role"
                     },
 
-                    AllowOfflineAccess = true, // Enables the use of refresh tokens
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly, // Recommended setting for better security
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly, 
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     AccessTokenLifetime = seconds
 
