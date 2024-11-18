@@ -145,11 +145,14 @@ namespace OMA_DuendeIdentityServer.Controller
 
             if (await _userManager.IsInRoleAsync(user, "Admin"))
             {
+
                 await _userManager.RemoveFromRoleAsync(user, "Admin");
+                await _userManager.AddToRoleAsync(user, "Hotline-User");
                 return Ok("Admin role removed from the user.");
             }
             else
             {
+                await _userManager.RemoveFromRoleAsync(user, "Hotline-User");
                 await _userManager.AddToRoleAsync(user, "Admin");
                 return Ok("Admin role added to the user.");
             }

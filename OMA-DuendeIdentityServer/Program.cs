@@ -113,8 +113,6 @@ namespace OMA_DuendeIdentityServer
                     Version = "v1",
                     Description = "This is the OMA User API, designed to manage user operations and roles",
                     
-                    
-                    
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
