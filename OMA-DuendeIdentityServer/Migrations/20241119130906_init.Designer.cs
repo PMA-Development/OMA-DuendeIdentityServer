@@ -12,8 +12,8 @@ using OMA_DuendeIdentityServer.Models;
 namespace OMA_DuendeIdentityServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241111182230_Init")]
-    partial class Init
+    [Migration("20241119130906_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,13 @@ namespace OMA_DuendeIdentityServer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "60c0905a-04a7-4764-a86e-03baef305b42",
+                            Id = "91e3b97a-ae5e-47ff-be7d-d2a5a79f2b89",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5694e035-8989-49a1-824b-ddb14d5cf081",
+                            Id = "c58baaeb-de30-4c4d-84fd-97494d6f851a",
                             Name = "Hotline-User",
                             NormalizedName = "HOTLINE-USER"
                         });
@@ -155,13 +155,13 @@ namespace OMA_DuendeIdentityServer.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "3c33e90b-6465-422f-873e-5763df415515",
-                            RoleId = "60c0905a-04a7-4764-a86e-03baef305b42"
+                            UserId = "c6936336-4a10-4445-b373-60f6a37a58c4",
+                            RoleId = "91e3b97a-ae5e-47ff-be7d-d2a5a79f2b89"
                         },
                         new
                         {
-                            UserId = "7f96c4d7-aad7-4e11-b4cd-b719698bb85e",
-                            RoleId = "5694e035-8989-49a1-824b-ddb14d5cf081"
+                            UserId = "cf9844c4-55aa-4eef-bba2-9b97771a8c29",
+                            RoleId = "c58baaeb-de30-4c4d-84fd-97494d6f851a"
                         });
                 });
 
@@ -255,37 +255,37 @@ namespace OMA_DuendeIdentityServer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3c33e90b-6465-422f-873e-5763df415515",
+                            Id = "c6936336-4a10-4445-b373-60f6a37a58c4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c17b79e-8b2a-4e28-93b7-605aaaa4d3cc",
+                            ConcurrencyStamp = "ae53331d-04ae-4257-bca9-274995040c69",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FullName = "Admin User",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMINUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHQCCHOPZJCT7pPzhjfZC+ppEnKPQRmQ0pFpCu5Pa3jUSgnhR2WJLkataxstKL9NKw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMcnxpjYnlbQNugpwaT5QjE/ypwinkzlmbYpmi99i5Hi2kH6wqB7FspWRf4RieWRHw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e93d69ea-afd7-4d43-ba92-034270c38d66",
+                            SecurityStamp = "a5324c3c-98d6-47db-9011-1d6d53869a11",
                             TwoFactorEnabled = false,
                             UserName = "adminUser"
                         },
                         new
                         {
-                            Id = "7f96c4d7-aad7-4e11-b4cd-b719698bb85e",
+                            Id = "cf9844c4-55aa-4eef-bba2-9b97771a8c29",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb65f4ea-0c56-4bd6-b45f-452df49c7485",
+                            ConcurrencyStamp = "3be9f3b3-bfef-45b8-aece-bd325afe8bb7",
                             Email = "hotlineuser@example.com",
                             EmailConfirmed = true,
                             FullName = "Hotline User",
                             LockoutEnabled = false,
                             NormalizedEmail = "HOTLINEUSER@EXAMPLE.COM",
                             NormalizedUserName = "HOTLINEUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGXBLmAkyBlasCo33Tn9KvA2X2uM6SGuBX4D+VCt5nSGlpAPWCij7KmjJBynHchAWw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENl9a8iRC1er7xzY+iLCX4USmlJVr/lVO6Ds3ExtMxJUBS3SYLVjvWURxvRii5jTpA==",
                             PhoneNumber = "0987654321",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d8aec65d-f678-4e0c-b45f-3a40913652c1",
+                            SecurityStamp = "5e3c3938-64bc-4698-9409-7b2185cfbb01",
                             TwoFactorEnabled = false,
                             UserName = "hotlineUser"
                         });

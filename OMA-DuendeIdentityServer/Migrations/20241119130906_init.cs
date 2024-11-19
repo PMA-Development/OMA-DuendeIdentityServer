@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OMA_DuendeIdentityServer.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -164,8 +164,8 @@ namespace OMA_DuendeIdentityServer.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "5694e035-8989-49a1-824b-ddb14d5cf081", null, "Hotline-User", "HOTLINE-USER" },
-                    { "60c0905a-04a7-4764-a86e-03baef305b42", null, "Admin", "ADMIN" }
+                    { "91e3b97a-ae5e-47ff-be7d-d2a5a79f2b89", null, "Admin", "ADMIN" },
+                    { "c58baaeb-de30-4c4d-84fd-97494d6f851a", null, "Hotline-User", "HOTLINE-USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -173,8 +173,8 @@ namespace OMA_DuendeIdentityServer.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "3c33e90b-6465-422f-873e-5763df415515", 0, "4c17b79e-8b2a-4e28-93b7-605aaaa4d3cc", "admin@example.com", true, "Admin User", false, null, "ADMIN@EXAMPLE.COM", "ADMINUSER", "AQAAAAIAAYagAAAAEHQCCHOPZJCT7pPzhjfZC+ppEnKPQRmQ0pFpCu5Pa3jUSgnhR2WJLkataxstKL9NKw==", "1234567890", false, "e93d69ea-afd7-4d43-ba92-034270c38d66", false, "adminUser" },
-                    { "7f96c4d7-aad7-4e11-b4cd-b719698bb85e", 0, "eb65f4ea-0c56-4bd6-b45f-452df49c7485", "hotlineuser@example.com", true, "Hotline User", false, null, "HOTLINEUSER@EXAMPLE.COM", "HOTLINEUSER", "AQAAAAIAAYagAAAAEGXBLmAkyBlasCo33Tn9KvA2X2uM6SGuBX4D+VCt5nSGlpAPWCij7KmjJBynHchAWw==", "0987654321", false, "d8aec65d-f678-4e0c-b45f-3a40913652c1", false, "hotlineUser" }
+                    { "c6936336-4a10-4445-b373-60f6a37a58c4", 0, "ae53331d-04ae-4257-bca9-274995040c69", "admin@example.com", true, "Admin User", false, null, "ADMIN@EXAMPLE.COM", "ADMINUSER", "AQAAAAIAAYagAAAAEMcnxpjYnlbQNugpwaT5QjE/ypwinkzlmbYpmi99i5Hi2kH6wqB7FspWRf4RieWRHw==", "1234567890", false, "a5324c3c-98d6-47db-9011-1d6d53869a11", false, "adminUser" },
+                    { "cf9844c4-55aa-4eef-bba2-9b97771a8c29", 0, "3be9f3b3-bfef-45b8-aece-bd325afe8bb7", "hotlineuser@example.com", true, "Hotline User", false, null, "HOTLINEUSER@EXAMPLE.COM", "HOTLINEUSER", "AQAAAAIAAYagAAAAENl9a8iRC1er7xzY+iLCX4USmlJVr/lVO6Ds3ExtMxJUBS3SYLVjvWURxvRii5jTpA==", "0987654321", false, "5e3c3938-64bc-4698-9409-7b2185cfbb01", false, "hotlineUser" }
                 });
 
             migrationBuilder.InsertData(
@@ -182,8 +182,8 @@ namespace OMA_DuendeIdentityServer.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { "60c0905a-04a7-4764-a86e-03baef305b42", "3c33e90b-6465-422f-873e-5763df415515" },
-                    { "5694e035-8989-49a1-824b-ddb14d5cf081", "7f96c4d7-aad7-4e11-b4cd-b719698bb85e" }
+                    { "91e3b97a-ae5e-47ff-be7d-d2a5a79f2b89", "c6936336-4a10-4445-b373-60f6a37a58c4" },
+                    { "c58baaeb-de30-4c4d-84fd-97494d6f851a", "cf9844c4-55aa-4eef-bba2-9b97771a8c29" }
                 });
 
             migrationBuilder.CreateIndex(
