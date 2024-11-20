@@ -16,7 +16,6 @@ namespace OMA_DuendeIdentityServer
                     ClientId = "OMA-Web",
                     ClientName = "Web Client Application",
                     AccessTokenLifetime = seconds,
-                    ClientSecrets = { new Secret("".ToSha256()), },
                     RequireClientSecret = false,
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = new List<string>
@@ -42,7 +41,7 @@ namespace OMA_DuendeIdentityServer
 {
                     ClientId = "OMA-Maui",
                     ClientName = "MAUI Client Application",
-                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
                     RedirectUris = { "myapp://auth" },
                     PostLogoutRedirectUris = { "myapp://auth" },
