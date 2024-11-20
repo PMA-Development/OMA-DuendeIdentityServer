@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace OMA_DuendeIdentityServer
 {
@@ -11,11 +12,11 @@ namespace OMA_DuendeIdentityServer
             return new List<Client>
             {
                  new Client
-                {
-
+                 {
                     ClientId = "OMA-Web",
-                    ClientName = "Example Client Application",
+                    ClientName = "Web Client Application",
                     AccessTokenLifetime = seconds,
+                    ClientSecrets = { new Secret("".ToSha256()), },
                     RequireClientSecret = false,
                     AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = new List<string>
@@ -36,7 +37,7 @@ namespace OMA_DuendeIdentityServer
                     AllowedCorsOrigins = { "https://localhost:7123" },
                     RequirePkce = true,
                     AllowPlainTextPkce = false
-                },
+                 },
                  new Client
 {
                     ClientId = "OMA-Maui",
@@ -54,7 +55,7 @@ namespace OMA_DuendeIdentityServer
                     },
 
                     AllowOfflineAccess = true,
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly, 
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     AccessTokenLifetime = seconds
 
