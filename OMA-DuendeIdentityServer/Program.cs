@@ -194,7 +194,7 @@ namespace OMA_DuendeIdentityServer
         {
             serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
             serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
-            serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+            //serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
         }
 
     
