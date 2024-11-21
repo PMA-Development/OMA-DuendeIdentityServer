@@ -149,47 +149,6 @@ The `appsettings.json` file contains configuration settings for the Duende Ident
 }
 ```
 
-
-# Roles and Permissions
-
-This project uses a role-based authorization system to manage access to resources and functionality. The roles are specifically designed to serve different purposes across the **Duende IdentityServer API** and the **OMA-API**.
-
-### **Roles**
-
-| Role          | Description                                                                                   | Typical Actions                                                                                   |
-|---------------|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| `hotline-user`| Default role for authenticated users. This role is specifically used in the **OMA-API**.      | Access features and endpoints within the OMA-API that are designed for regular user interactions.|
-| `admin`       | A privileged role managed on the **Duende IdentityServer** for user administration tasks.     | Perform CRUD operations on users, manage roles, and configure user-related settings.             |
-
-### **Usage in the Application**
-
-#### **`hotline-user` Role**
-- **Purpose**: 
-  - This role is **not directly used in the Duende IdentityServer** but is passed to and utilized in the OMA-API.
-  - Enables access to specific endpoints in the OMA-API designed for hotline users.
-- **Assignment**:
-  - Automatically assigned when a user is created on the IdentityServer.
-  - Tokens issued for the OMA-API include this role in the claims to enforce role-based access control (RBAC).
-
-#### **`admin` Role**
-- **Purpose**:
-  - Used in **Duende IdentityServer** for managing users and roles.
-  - Allows access to administrative endpoints for creating, updating, and deleting users, as well as toggling roles.
-- **Assignment**:
-  - Assigned manually to specific users by administrators via the `/api/User/ToggleAdminRole` endpoint.
-for hotline users.    
-
-### Role-Based Access Workflow
-1. **Duende IdentityServer**:
-   - A user is created.
-   - By default, the `hotline-user` role is assigned to new users.
-   - Admin users can be elevated by assigning the `admin` role.
-2. **OMA-API**:
-   - Tokens issued by the IdentityServer include user roles (e.g., `hotline-user` or `admin`).
-   - The OMA-API validates these tokens and enforces RBAC based on the `hotline-user` role for user-specific features.
-
-
-
 ## Clients Configuration
 
 The following clients are configured in the **Duende IdentityServer** to support authentication for the web and mobile applications.
