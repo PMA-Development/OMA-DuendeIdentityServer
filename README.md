@@ -16,10 +16,6 @@ A Duende IdentityServer designed to serve as the identity solution for GoGreen, 
 
 Follow these steps to set up and run the project locally:
 
-### Prerequisites
-- **SQL Server**: Ensure a running SQL Server instance for database connections.
-- **Tools**: (Optional) Visual Studio or VS Code for development.
-
 ### Setup Instructions
 1. Clone the Repository:
 2. Set up the Appsettings: 
@@ -62,7 +58,7 @@ read more about it [here](https://docs.duendesoftware.com/identityserver/v7/quic
 
 ## ApplicationDbContext
 
-The **ApplicationDbContext** is responsible for managing user-related information in the database. It stores data such as users, roles, claims, and their relationships. This context integrates with ASP.NET Core Identity to provide essential user and role management functionality.
+The **ApplicationDbContext** is responsible for managing user-related information in the database. It stores data such as users, roles, claims, and their relationships. This context integrates with ASP.NET Core Identity to provide user and role management functionality.
 
 
 # NuGet Packages
@@ -91,7 +87,7 @@ The **ApplicationDbContext** is responsible for managing user-related informatio
 ## API Documentation
 
  ### Swagger UI 
- This project includes **Swagger UI** for exploring and testing API endpoints. 
+ This project includes **Swagger UI** for testing API endpoints. 
  **Access Swagger Documentation**: 
  - URL: [http://localhost:5000/swagger](http://localhost:5000/swagger) 
  - **Note**: Swagger is only enabled in the **Debug** environment for security purposes. It is not available in production.
@@ -169,9 +165,6 @@ The following clients are configured in the **Duende IdentityServer** to support
 - **Special Configurations**:
   - No client secret required.
   - PKCE (`RequirePkce`) is enabled for enhanced security.
-
-
-
 
 #### OMA-Maui (MAUI Client Application)
 - **Client Type**: Mobile application.
